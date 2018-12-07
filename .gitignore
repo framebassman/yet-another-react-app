@@ -1,0 +1,23 @@
+# Mac
+.DS_Store
+
+# IDE
+.idea
+.vimrc
+.vscode
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependency directory
+node_modules
+
+# Optional npm cache directory
+.npm
+
+# frontend build artefacts
+services/client/dist/*.js
+services/client/dist/*.css
+services/client/dist/*.map
+services/client/dist/*.json
