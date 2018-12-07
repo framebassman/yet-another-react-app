@@ -10,8 +10,8 @@ import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const buildPath = resolve(__dirname, './dist');
 const nodeModulesPath = resolve(__dirname, './node_modules');
-const faviconPath = resolve(__dirname, './src/assets/favicon.ico');
-const configPath = resolve(__dirname, './src/config/develop.config.json');
+const faviconPath = resolve(__dirname, './client/assets/favicon.ico');
+const configPath = resolve(__dirname, './client/config/develop.config.json');
 
 const filesToCopy = [
   {from: faviconPath, to: 'favicon.ico'},
@@ -22,10 +22,10 @@ if (fs.existsSync(configPath)) {
 }
 
 const common: webpack.Configuration = {
-  // context: resolve(__dirname, './src'),
+  // context: resolve(__dirname, './client'),
 
   entry: {
-      index: resolve(__dirname, './src/index.tsx'),
+      index: resolve(__dirname, './client/index.tsx'),
   },
 
   resolve: {
@@ -56,7 +56,7 @@ const common: webpack.Configuration = {
       new HtmlWebpackPlugin({
           filename: 'index.html',
           favicon: faviconPath,
-          template: resolve(__dirname, './src/index.html'),
+          template: resolve(__dirname, './client/index.html'),
       }),
       new CopyWebpackPlugin(filesToCopy),
   ],
@@ -75,7 +75,7 @@ const common: webpack.Configuration = {
                       },
                   },
               ],
-              exclude: [nodeModulesPath, resolve(__dirname, './src/protocol')],
+              exclude: [nodeModulesPath, resolve(__dirname, './client/protocol')],
           },
           {
               test: /\.tsx?$/,
@@ -178,7 +178,5 @@ const prod: webpack.Configuration = {
 const config: webpack.Configuration = NODE_ENV !== 'development'
     ? webpackMerge(common, prod)
     : webpackMerge(common, dev);
-    // ? prod
-    // : dev;
 
 export default config;
