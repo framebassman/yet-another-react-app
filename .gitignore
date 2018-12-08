@@ -17,7 +17,4 @@ node_modules
 .npm
 
 # frontend build artefacts
-services/client/dist/*.js
-services/client/dist/*.css
-services/client/dist/*.map
-services/client/dist/*.json
+public/*

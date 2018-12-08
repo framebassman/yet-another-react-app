@@ -8,10 +8,10 @@ import * as CleanWebpackPlugin from 'clean-webpack-plugin';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const buildPath = resolve(__dirname, './dist');
+const buildPath = resolve(__dirname, '../public');
 const nodeModulesPath = resolve(__dirname, './node_modules');
-const faviconPath = resolve(__dirname, './client/assets/favicon.ico');
-const configPath = resolve(__dirname, './client/config/develop.config.json');
+const faviconPath = resolve(__dirname, './assets/favicon.ico');
+const configPath = resolve(__dirname, './config/develop.config.json');
 
 const filesToCopy = [
   {from: faviconPath, to: 'favicon.ico'},
@@ -22,10 +22,8 @@ if (fs.existsSync(configPath)) {
 }
 
 const common: webpack.Configuration = {
-  // context: resolve(__dirname, './client'),
-
   entry: {
-      index: resolve(__dirname, './client/index.tsx'),
+      index: resolve(__dirname, './index.tsx'),
   },
 
   resolve: {
@@ -56,7 +54,7 @@ const common: webpack.Configuration = {
       new HtmlWebpackPlugin({
           filename: 'index.html',
           favicon: faviconPath,
-          template: resolve(__dirname, './client/index.html'),
+          template: resolve(__dirname, './index.html'),
       }),
       new CopyWebpackPlugin(filesToCopy),
   ],
@@ -75,11 +73,18 @@ const common: webpack.Configuration = {
                       },
                   },
               ],
-              exclude: [nodeModulesPath, resolve(__dirname, './client/protocol')],
+              exclude: [nodeModulesPath, resolve(__dirname, './protocol')],
           },
           {
               test: /\.tsx?$/,
-              use: ['awesome-typescript-loader'],
+              use: [
+                  {
+                      loader: 'awesome-typescript-loader',
+                      options: {
+                        configFileName: resolve(__dirname, './tsconfig.json'),
+                      },
+                  },
+              ],
               exclude: [nodeModulesPath],
           },
           {
@@ -109,7 +114,9 @@ const common: webpack.Configuration = {
           {
               test: /\.(sa|sc)ss$/,
               use: [
-                  NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+                  NODE_ENV === 'development'
+                  ? 'style-loader'
+                  : MiniCssExtractPlugin.loader,
                   {
                       loader: 'css-loader',
                       options: {
