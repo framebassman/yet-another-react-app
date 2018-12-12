@@ -7,7 +7,7 @@ import * as CopyWebpackPlugin from 'copy-webpack-plugin';
 import * as CleanWebpackPlugin from 'clean-webpack-plugin';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const NODE_ENV = process.env.NODE_ENV || 'dev';
 const buildPath = resolve(__dirname, '../public');
 const nodeModulesPath = resolve(__dirname, './node_modules');
 const faviconPath = resolve(__dirname, './assets/favicon.ico');
@@ -32,7 +32,6 @@ const common: webpack.Configuration = {
 
   output: {
       path: buildPath,
-      // publicPath: 'http://192.168.64.3:8080',
       publicPath: '/',
       filename: 'js/[name].[hash:6].bundle.js',
       chunkFilename: 'js/modules/[name].[chunkhash:6].chunk.js',
@@ -81,7 +80,7 @@ const common: webpack.Configuration = {
                   {
                       loader: 'awesome-typescript-loader',
                       options: {
-                        configFileName: resolve(__dirname, './tsconfig.json'),
+                        configFileName: resolve(__dirname, './../tsconfig.json'),
                       },
                   },
               ],
@@ -114,7 +113,7 @@ const common: webpack.Configuration = {
           {
               test: /\.(sa|sc)ss$/,
               use: [
-                  NODE_ENV === 'development'
+                  NODE_ENV === 'dev'
                   ? 'style-loader'
                   : MiniCssExtractPlugin.loader,
                   {
@@ -171,7 +170,21 @@ const dev: webpack.Configuration = {
           poll: false,
           ignored: /node_modules/,
       },
+      hot: true,
+      inline: true,
       compress: true,
+      port: 7001,
+      host: '0.0.0.0',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      proxy: {
+        '/': {
+            target: 'http://0.0.0.0:7000',
+            secure: false,
+            changeOrigin: true,
+        },
+      },
       publicPath: '/',
   },
 
@@ -182,7 +195,7 @@ const prod: webpack.Configuration = {
   mode: 'production',
 };
 
-const config: webpack.Configuration = NODE_ENV !== 'development'
+const config: webpack.Configuration = NODE_ENV !== 'dev'
     ? webpackMerge(common, prod)
     : webpackMerge(common, dev);
 
